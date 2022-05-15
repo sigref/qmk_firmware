@@ -163,5 +163,9 @@ void matrix_scan_user(void) {
     SEQ_FOUR_KEYS(KC_L, KC_N, KC_U, KC_M) {
       layer_move(_NUMPAD);
     }
+
+    SEQ_ONE_KEY(KC_LCTRL) {
+      tap_code(KC_CAPS);
+    }
   }
 }
