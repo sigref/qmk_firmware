@@ -34,7 +34,7 @@ enum {
   TD_SPL_SPLFRZ,
 };
 
-void dance_bs_bsfrz_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_bs_bsfrz_finished(tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
     tap_code16(C(KC_BSLS));
   } else {
@@ -46,7 +46,7 @@ void dance_bs_bsfrz_finished(qk_tap_dance_state_t *state, void *user_data) {
   }
 }
 
-qk_tap_dance_action_t tap_dance_actions[] = {
+tap_dance_action_t tap_dance_actions[] = {
   [TD_C_AC] = ACTION_TAP_DANCE_DOUBLE(KC_C, A(KC_C)),
   [TD_CN_CSN] = ACTION_TAP_DANCE_DOUBLE(C(KC_N), C(S(KC_N))),
   [TD_SPL_SPLFRZ] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_bs_bsfrz_finished, NULL),
@@ -72,9 +72,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  [_QWERTY] = LAYOUT(
   KC_GRV,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS,
   KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_EQL,
-  KC_LCTRL, KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+  KC_LCTL,  KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
   KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_LBRC,  KC_RBRC,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_RSFT,
-           KC_LALT, KC_LGUI, LT(_GRYPH, KC_LANG2),  KC_SPC,  KC_ENT,   LT(_MOVE, KC_LANG1), KC_BSPC, KC_RALT
+           KC_LALT, KC_LGUI, LT(_GRYPH, KC_LNG2),    KC_SPC,   KC_ENT,   LT(_MOVE, KC_LNG1), KC_BSPC, KC_RALT
 
 ),
 /* GRYPH
@@ -116,7 +116,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_MOVE] = LAYOUT(
   KC_ESC,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, XXXXXXX,
   _______, XXXXXXX, KC_UP,   XXXXXXX, XXXXXXX, XXXXXXX,                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_END,  XXXXXXX,
-  _______, KC_LEFT, KC_DOWN, KC_RIGHT,XXXXXXX, XXXXXXX,                       KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,KC_PGUP, KC_RCTRL,
+  _______, KC_LEFT, KC_DOWN, KC_RIGHT,XXXXXXX, XXXXXXX,                       KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,KC_PGUP, KC_RCTL,
   _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PGDN, _______,
                              _______, _______, DF_SWITCH, XXXXXXX, XXXXXXX, _______, _______, _______
 ),
@@ -358,18 +358,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
-LEADER_EXTERNS();
-void matrix_scan_user(void) {
-  LEADER_DICTIONARY() {
-    leading = false;
-    leader_end();
-
-    SEQ_FOUR_KEYS(KC_T, KC_E, KC_S, KC_T) {
-      SEND_STRING("QMK leader key test.");
+void leader_start_user(void) {
     }
 
-    SEQ_ONE_KEY(KC_LCTRL) {
+void leader_end_user(void) {
+  if (leader_sequence_four_keys(KC_T, KC_E, KC_S, KC_T)) {
+    SEND_STRING("QMK leader key test.");
+  } else if (leader_sequence_one_key(KC_LCTL)) {
       tap_code(KC_CAPS);
-    }
   }
 }
