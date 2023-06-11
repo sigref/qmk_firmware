@@ -1,7 +1,5 @@
-
-#include QMK_KEYBOARD_H
+#include "quantum.h"
 #include <stdio.h>
-#include "lily58.h"
 
 #define L_QWERTY 0
 #define L_GRYPH (1 << 1)
