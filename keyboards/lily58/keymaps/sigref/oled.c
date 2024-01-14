@@ -1,6 +1,25 @@
 // https://github.com/JBaguley/qmk_firmware/blob/c653e0f22f99828d0a14f10047a11f162772d6da/keyboards/crkbd/keymaps/retrograde/keymap.c
 
 #include QMK_KEYBOARD_H
+#include "oled.h"
+
+// SSD1306 OLED update loop, make sure to enable OLED_ENABLE=yes in rules.mk
+#ifdef OLED_ENABLE
+
+oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+    if (!is_keyboard_master())
+        return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
+    return rotation;
+}
+
+bool oled_task_user(void) {
+    if (is_keyboard_left()) {
+        oled_write(read_logo(), false);
+    } else {
+        render_space(); // Call this to render the space stuff on the one screen
+    }
+    return false;
+}
 
 // Spaceship OLED Code Starts Here
 
@@ -202,7 +221,7 @@ static const char PROGMEM mask_row_4[] = {
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
 };
 
-void render_space(void) {
+static void render_space(void) {
     char wpm = get_current_wpm();
     char render_row[128];
     int i;
@@ -244,3 +263,5 @@ void render_space(void) {
 
     state = (state + 1 + (wpm / 15)) % (sizeof(render_row) * 2);
 }
+
+#endif // OLED_ENABLE

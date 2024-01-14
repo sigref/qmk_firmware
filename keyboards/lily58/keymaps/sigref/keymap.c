@@ -1,5 +1,5 @@
 #include QMK_KEYBOARD_H
-#include "oled_animation.c"
+#include "oled.h"
 
 enum layer_number {
     _QWERTY = 0,
@@ -86,46 +86,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //   return update_tri_layer_state(state, _GRYPH, _MOVE, _SWITCH);
 // }
 
-// SSD1306 OLED update loop, make sure to enable OLED_ENABLE=yes in rules.mk
-#ifdef OLED_ENABLE
-
-oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    if (!is_keyboard_master())
-        return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
-    return rotation;
-}
-
-// When you add source files to SRC in rules.mk, you can use functions.
-// const char *read_layer_state(void); <- cannot use with changing default layer
-const char *read_logo(void);
-void set_keylog(uint16_t keycode, keyrecord_t *record);
-const char *read_keylog(void);
-const char *read_keylogs(void);
-
-char* default_layer_name = "Layer: DEFAULT";
-const char* layer_name = "";
-
-bool oled_task_user(void) {
-    if (is_keyboard_left()) {
-        oled_write(read_logo(), false);
-    } else {
-        render_space(); // Call this to render the space stuff on the one screen
-    }
-    return false;
-}
-#endif // OLED_ENABLE
-
 static uint8_t CAP_LCTL_PRESS_CNT = 0;
 static uint16_t CAP_LCTL_PRESSED_TIME = 0;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (record->event.pressed) {
-#ifdef OLED_ENABLE
-        set_keylog(keycode, record);
-#endif
-        // set_timelog();
-    }
-
     // CAP_LCTLをダブルタップでCAPS送信
     if (keycode == CAP_LCTL) {
         if (record->event.pressed) {
@@ -153,18 +117,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case DF_SWITCH:
             if (record->event.pressed) {
-#ifdef OLED_ENABLE
-                default_layer_name = "Layer: SWITCH";
-#endif
                 default_layer_set(_SWITCH);
                 layer_move(_SWITCH);
             }
             return false;
         case DF_QWERTY:
             if (record->event.pressed) {
-#ifdef OLED_ENABLE
-                default_layer_name = "Layer: DEFAULT";
-#endif
                 default_layer_set(_QWERTY);
                 layer_move(_QWERTY);
             }
