@@ -5,6 +5,17 @@
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #endif
 
+#pragma region user_config
+typedef union {
+    uint32_t raw;
+    struct {
+        bool is_mac : 1;
+    };
+} user_config_t;
+
+user_config_t user_config;
+#pragma endregion
+
 enum Layer {
     L_DEFAULT = 0,
     L_GRYPH,
@@ -13,7 +24,10 @@ enum Layer {
 };
 
 enum CustomKeyCode {
-    CK_ = SAFE_RANGE,
+    CK_SET_WIN = SAFE_RANGE,
+    CK_SET_MAC,
+    CK_WALT_MGUI,
+    CK_WWIN_MOPT,
 };
 
 enum TapDanceKeyCode {
@@ -27,9 +41,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [L_DEFAULT] = LAYOUT(
         MT(KC_GRV, KC_ESC), KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                /**/              KC_6,    KC_7,    KC_8,    KC_9,   KC_0,            TD(TD_MIN_EQ),
         KC_TAB,             KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                /**/              KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,            KC_BSLS,
-        KC_LCTL,            KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                /**/              KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN,         KC_QUOT,
+        KC_LCTL,            KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                /**/              KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN,         RCTL(KC_QUOT),
         KC_LSFT,            KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,   TD(TD_LBRC), /**/ TD(TD_RBRC), KC_N,    KC_M,    KC_COMM, KC_DOT, TD(TD_SLS_BSLS), KC_RSFT,
-                                KC_LALT, KC_LGUI, LT(L_GRYPH, KC_LNG2), KC_SPC,      /**/ KC_ENT,      LT(L_MOVE, KC_LNG1), KC_BSPC, KC_DEL
+                      CK_WWIN_MOPT, CK_WALT_MGUI, LT(L_GRYPH, KC_LNG2), KC_SPC,      /**/ KC_ENT,      LT(L_MOVE, KC_LNG1), KC_BSPC, KC_DEL
     ),
 
     [L_GRYPH] = LAYOUT(
@@ -49,13 +63,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [L_TRI] = LAYOUT(
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          /**/          XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR, KC_SCRL, KC_PAUS,
-        DM_RSTP, DM_REC1, DM_REC2, XXXXXXX, XXXXXXX, XXXXXXX,          /**/          XXXXXXX, XXXXXXX, XXXXXXX, KC_INS,  KC_HOME, KC_PGUP,
-        KC_CAPS, DM_PLY1, DM_PLY2, XXXXXXX, XXXXXXX, XXXXXXX,          /**/          XXXXXXX, XXXXXXX, XXXXXXX, KC_DEL,  KC_END,  KC_PGDN,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, /**/ XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                                   XXXXXXX, XXXXXXX, _______, XXXXXXX, /**/ XXXXXXX, _______, XXXXXXX, XXXXXXX
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,             /**/             XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR, KC_SCRL, KC_PAUS,
+        DM_RSTP, DM_REC1, DM_REC2, XXXXXXX, XXXXXXX, XXXXXXX,             /**/             XXXXXXX, XXXXXXX, XXXXXXX, KC_INS,  KC_HOME, KC_PGUP,
+        KC_CAPS, DM_PLY1, DM_PLY2, XXXXXXX, XXXXXXX, XXXXXXX,             /**/             XXXXXXX, XXXXXXX, XXXXXXX, KC_DEL,  KC_END,  KC_PGDN,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, CK_SET_WIN, /**/ CK_SET_MAC, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                                   XXXXXXX, XXXXXXX, _______, XXXXXXX,    /**/ XXXXXXX,    _______, XXXXXXX, XXXXXXX
     ),
 };
+
+#pragma region eeconfig_init_user
+void eeconfig_init_user(void) { // EEPROM is getting reset!
+    user_config.raw = 0;
+    user_config.is_mac = false;   // We want this enabled by default
+    eeconfig_update_user(user_config.raw); // Write default value to EEPROM now
+}
+#pragma endregion
+
+#pragma region keyboard_post_init_user
+void keyboard_post_init_user(void) {
+    user_config.raw = eeconfig_read_user();
+}
+#pragma endregion
 
 #pragma region layer_state_set_user
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -73,6 +101,36 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     tap_code16(KC_GRV);
                 } else {
                     tap_code16(KC_ESC);
+                }
+            }
+            return false;
+        case CK_SET_WIN:
+            if (record->event.pressed) {
+                user_config.is_mac = false;
+                eeconfig_update_user(user_config.raw);
+            }
+            return false;
+        case CK_SET_MAC:
+            if (record->event.pressed) {
+                user_config.is_mac = true;
+                eeconfig_update_user(user_config.raw);
+            }
+            return false;
+        case CK_WALT_MGUI:
+            if (record->event.pressed) {
+                if (user_config.is_mac) {
+                    tap_code16(KC_LGUI);
+                } else {
+                    tap_code16(KC_LALT);
+                }
+            }
+            return false;
+        case CK_WWIN_MOPT:
+            if (record->event.pressed) {
+                if (user_config.is_mac) {
+                    tap_code16(KC_LOPT);
+                } else {
+                    tap_code16(KC_LWIN);
                 }
             }
             return false;
