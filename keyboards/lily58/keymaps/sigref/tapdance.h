@@ -4,9 +4,8 @@
 #include "custom_keycodes.h"
 
 enum {
-    TD_C_AC,
-    TD_CN_CSN,
-    TD_SPL_SPLFRZ,
+    TD_L_BRACKET,
+    TD_R_BRACKET,
+    TD_MIN_EQ,
+    TD_SLS_BSLS,
 };
-
-void dance_bs_bsfrz_finished(tap_dance_state_t *state, void *user_data);

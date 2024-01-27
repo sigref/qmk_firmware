@@ -4,6 +4,16 @@ uint8_t CAP_LCTL_PRESS_CNT = 0;
 uint16_t CAP_LCTL_PRESSED_TIME = 0;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (keycode == CKC_GRV_ESC) {
+        if (record->tap.count && record->event.pressed) {
+            tap_code16(KC_GRV);
+            return false;
+        } else if (record->event.pressed) {
+            tap_code16(KC_ESC);
+            return false;
+        }
+    }
+
     // CAP_LCTLをダブルタップでCAPS送信
     if (keycode == CAP_LCTL) {
         if (record->event.pressed) {

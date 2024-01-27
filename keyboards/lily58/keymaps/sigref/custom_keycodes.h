@@ -6,4 +6,5 @@ enum custom_keycodes {
     DF_SWITCH = SAFE_RANGE,
     DF_QWERTY,
     CAP_LCTL,
+    CKC_GRV_ESC,
 };
