@@ -9,6 +9,7 @@ enum Layer {
     L_DEFAULT = 0,
     L_GRYPH,
     L_MOVE,
+    L_TRI,
 };
 
 enum CustomKeyCode {
@@ -16,19 +17,19 @@ enum CustomKeyCode {
 };
 
 enum TapDanceKeyCode {
-    TD_L_BRACKET,
-    TD_R_BRACKET,
+    TD_LBRC,
+    TD_RBRC,
     TD_MIN_EQ,
     TD_SLS_BSLS,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [L_DEFAULT] = LAYOUT(
-        CK_GRV_ESC, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                     /**/                   KC_6,    KC_7,    KC_8,    KC_9,   KC_0,            TD(TD_MIN_EQ),
-        KC_TAB,     KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                     /**/                   KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,            KC_BSLS,
-        KC_LCTL,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     /**/                   KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN,         KC_QUOT,
-        KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,   TD(TD_L_BRACKET), /**/ TD(TD_R_BRACKET), KC_N,    KC_M,    KC_COMM, KC_DOT, TD(TD_SLS_BSLS), KC_RSFT,
-                        KC_LALT, KC_LGUI, LT(L_GRYPH, KC_LNG2), KC_SPC,           /**/ KC_ENT,           LT(L_MOVE, KC_LNG1), KC_BSPC, KC_RALT
+        CK_GRV_ESC, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                /**/              KC_6,    KC_7,    KC_8,    KC_9,   KC_0,            TD(TD_MIN_EQ),
+        KC_TAB,     KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                /**/              KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,            KC_BSLS,
+        KC_LCTL,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                /**/              KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN,         KC_QUOT,
+        KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,   TD(TD_LBRC), /**/ TD(TD_RBRC), KC_N,    KC_M,    KC_COMM, KC_DOT, TD(TD_SLS_BSLS), KC_RSFT,
+                        KC_LALT, KC_LGUI, LT(L_GRYPH, KC_LNG2), KC_SPC,      /**/ KC_ENT,      LT(L_MOVE, KC_LNG1), KC_BSPC, KC_DEL
     ),
 
     [L_GRYPH] = LAYOUT(
@@ -36,18 +37,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_F1,      KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,            /**/          KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
         CK_GRV_ESC, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,          /**/          KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_TILD,
         _______,    _______, _______, _______, _______, _______, _______, /**/ _______, XXXXXXX, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE,
-                                      _______, _______, _______, _______, /**/ _______, XXXXXXX, KC_DEL, _______
+                                      QK_BOOT, _______, _______, _______, /**/ _______, _______, KC_MENU, KC_RALT
     ),
 
     [L_MOVE] = LAYOUT(
-        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          /**/          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, XXXXXXX,
-        _______, XXXXXXX, KC_UP,   XXXXXXX, XXXXXXX, XXXXXXX,          /**/          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_END,  XXXXXXX,
-        _______, KC_LEFT, KC_DOWN, KC_RIGHT,XXXXXXX, XXXXXXX,          /**/          KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,KC_PGUP, KC_RCTL,
-        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, /**/ XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PGDN, _______,
-                                   _______, _______, XXXXXXX, XXXXXXX, /**/ XXXXXXX, _______, KC_DEL,  _______
+        _______, KC_1,    KC_2,    KC_3,     KC_4,    KC_5,             /**/          KC_6,    KC_7,    KC_8,    KC_9,     KC_0,    XXXXXXX,
+        _______, XXXXXXX, KC_UP,   XXXXXXX,  XXXXXXX, XXXXXXX,          /**/          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX,
+        _______, KC_LEFT, KC_DOWN, KC_RIGHT, XXXXXXX, XXXXXXX,          /**/          KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT, XXXXXXX, KC_RCTL,
+        _______, KC_HOME, KC_END,  KC_PGUP,  KC_PGDN, XXXXXXX, XXXXXXX, /**/ XXXXXXX, XXXXXXX, KC_HOME, KC_END,  KC_PGUP,  KC_PGDN, _______,
+                                   _______,  _______, _______, XXXXXXX, /**/ XXXXXXX, _______, XXXXXXX, QK_BOOT
     ),
 
+    [L_TRI] = LAYOUT(
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          /**/          XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR, KC_SCRL, KC_PAUS,
+        DM_RSTP, DM_REC1, DM_REC2, XXXXXXX, XXXXXXX, XXXXXXX,          /**/          XXXXXXX, XXXXXXX, XXXXXXX, KC_INS,  KC_HOME, KC_PGUP,
+        KC_CAPS, DM_PLY1, DM_PLY2, XXXXXXX, XXXXXXX, XXXXXXX,          /**/          XXXXXXX, XXXXXXX, XXXXXXX, KC_DEL,  KC_END,  KC_PGDN,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, /**/ XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                                   XXXXXXX, XXXXXXX, _______, XXXXXXX, /**/ XXXXXXX, _______, XXXXXXX, XXXXXXX
+    ),
 };
+
+#pragma region layer_state_set_user
+layer_state_t layer_state_set_user(layer_state_t state) {
+  state = update_tri_layer_state(state, L_GRYPH, L_MOVE, L_TRI);
+  return state;
+}
+#pragma endregion
 
 #pragma region process_record_user
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -337,6 +352,7 @@ void render_space(void) {
 #pragma region tapdance
 #ifdef TAP_DANCE_ENABLE
 
+#pragma region TD_LBRC
 bool l_brackets_lshift_pressed = false;
 bool l_brackets_rshift_pressed = false;
 bool l_brackets_wip = false;
@@ -388,8 +404,9 @@ void dance_l_brackets_reset(tap_dance_state_t *state, void *user_data) {
         unregister_mods(MOD_BIT_RSHIFT);
     }
 }
+#pragma endregion
 
-
+#pragma region TD_RBRC
 bool r_brackets_lshift_pressed = false;
 bool r_brackets_rshift_pressed = false;
 bool r_brackets_wip = false;
@@ -441,10 +458,11 @@ void dance_r_brackets_reset(tap_dance_state_t *state, void *user_data) {
         unregister_mods(MOD_BIT_RSHIFT);
     }
 }
+#pragma endregion
 
 tap_dance_action_t tap_dance_actions[] = {
-    [TD_L_BRACKET] = ACTION_TAP_DANCE_FN_ADVANCED(dance_l_brackets_each, dance_l_brackets_finished, dance_l_brackets_reset),
-    [TD_R_BRACKET] = ACTION_TAP_DANCE_FN_ADVANCED(dance_r_brackets_each, dance_r_brackets_finished, dance_r_brackets_reset),
+    [TD_LBRC] = ACTION_TAP_DANCE_FN_ADVANCED(dance_l_brackets_each, dance_l_brackets_finished, dance_l_brackets_reset),
+    [TD_RBRC] = ACTION_TAP_DANCE_FN_ADVANCED(dance_r_brackets_each, dance_r_brackets_finished, dance_r_brackets_reset),
     [TD_MIN_EQ] = ACTION_TAP_DANCE_DOUBLE(KC_MINS, KC_EQL),
     [TD_SLS_BSLS] = ACTION_TAP_DANCE_DOUBLE(KC_SLSH, KC_BSLS),
 };
