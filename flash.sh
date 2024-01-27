@@ -1,3 +1,3 @@
 #!/bin/bash
 
-qmk flash -kb lily58 -km sigref -bl avrdude-split-left && qmk flash -kb lily58 -km sigref -bl avrdude-split-right
+./flash_l.sh && ./flash_r.sh
