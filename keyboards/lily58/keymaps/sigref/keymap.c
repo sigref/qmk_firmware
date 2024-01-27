@@ -82,6 +82,52 @@ void eeconfig_init_user(void) { // EEPROM is getting reset!
 #pragma region keyboard_post_init_user
 void keyboard_post_init_user(void) {
     user_config.raw = eeconfig_read_user();
+
+    setPinOutput(B0);
+    setPinOutput(D5);
+
+    led_t state = host_keyboard_led_state();
+    if (is_keyboard_left()) {
+        if (state.caps_lock) {
+            writePinLow(B0);
+            writePinLow(D5);
+        } else {
+            writePinHigh(B0);
+            writePinHigh(D5);
+        }
+    } else {
+        if (state.scroll_lock) {
+            writePinLow(B0);
+            writePinLow(D5);
+        } else {
+            writePinHigh(B0);
+            writePinHigh(D5);
+        }
+    }
+}
+#pragma endregion
+
+#pragma region led_update_user
+bool led_update_user(led_t led_state) {
+    // pro microの赤ledでcaps/scroll lockの状態を表示
+    if (is_keyboard_left()) {
+        if (led_state.caps_lock) {
+            writePinLow(B0);
+            writePinLow(D5);
+        } else {
+            writePinHigh(B0);
+            writePinHigh(D5);
+        }
+    } else {
+        if (led_state.scroll_lock) {
+            writePinLow(B0);
+            writePinLow(D5);
+        } else {
+            writePinHigh(B0);
+            writePinHigh(D5);
+        }
+    }
+    return false;
 }
 #pragma endregion
 
