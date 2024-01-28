@@ -26,7 +26,7 @@ enum Layer {
 enum CustomKeyCode {
     CK_SET_WIN = SAFE_RANGE,
     CK_SET_MAC,
-    CK_WALT_MGUI,
+    CK_WALT_MCMD,
     CK_WWIN_MOPT,
 };
 
@@ -43,7 +43,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,             KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                /**/              KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,            KC_BSLS,
         KC_LCTL,            KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                /**/              KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN,         RCTL(KC_QUOT),
         KC_LSFT,            KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,   TD(TD_LBRC), /**/ TD(TD_RBRC), KC_N,    KC_M,    KC_COMM, KC_DOT, TD(TD_SLS_BSLS), KC_RSFT,
-                      CK_WWIN_MOPT, CK_WALT_MGUI, LT(L_GRYPH, KC_LNG2), KC_SPC,      /**/ KC_ENT,      LT(L_MOVE, KC_LNG1), KC_BSPC, KC_DEL
+                      CK_WWIN_MOPT, CK_WALT_MCMD, LT(L_GRYPH, KC_LNG2), KC_SPC,      /**/ KC_ENT,      LT(L_MOVE, KC_LNG1), KC_BSPC, KC_DEL
     ),
 
     [L_GRYPH] = LAYOUT(
@@ -162,21 +162,33 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 eeconfig_update_user(user_config.raw);
             }
             return false;
-        case CK_WALT_MGUI:
+        case CK_WALT_MCMD:
             if (record->event.pressed) {
                 if (user_config.is_mac) {
-                    tap_code16(KC_LGUI);
+                    register_code16(KC_LCMD);
                 } else {
-                    tap_code16(KC_LALT);
+                    register_code16(KC_LALT);
+                }
+            } else {
+                if (user_config.is_mac) {
+                    unregister_code16(KC_LCMD);
+                } else {
+                    unregister_code16(KC_LALT);
                 }
             }
             return false;
         case CK_WWIN_MOPT:
             if (record->event.pressed) {
                 if (user_config.is_mac) {
-                    tap_code16(KC_LOPT);
+                    register_code16(KC_LOPT);
                 } else {
-                    tap_code16(KC_LWIN);
+                    register_code16(KC_LWIN);
+                }
+            } else {
+                if (user_config.is_mac) {
+                    unregister_code16(KC_LOPT);
+                } else {
+                    unregister_code16(KC_LWIN);
                 }
             }
             return false;
