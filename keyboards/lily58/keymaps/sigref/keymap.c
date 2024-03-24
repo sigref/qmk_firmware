@@ -74,6 +74,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 uint32_t render_space_sleep = 0;
+bool is_recording_dm = false;
 
 #pragma region eeconfig_init_user
 void eeconfig_init_user(void) { // EEPROM is getting reset!
@@ -94,36 +95,39 @@ void keyboard_post_init_user(void) {
     if (is_keyboard_left()) {
         if (state.caps_lock) {
             writePinLow(B0);
-            writePinLow(D5);
         } else {
             writePinHigh(B0);
+        }
+
+        if (state.scroll_lock) {
+            writePinLow(D5);
+        } else {
             writePinHigh(D5);
         }
     } else {
-        if (state.scroll_lock) {
-            writePinLow(B0);
-            writePinLow(D5);
-        } else {
-            writePinHigh(B0);
-            writePinHigh(D5);
-        }
+        writePinHigh(B0);
+        writePinHigh(D5);
     }
 }
 #pragma endregion
 
 #pragma region led_update_user
 bool led_update_user(led_t led_state) {
-    // pro microの赤ledでcaps/scroll lockの状態を表示
+    // pro microの赤ledでcaps/scroll lock, dynamic macroの状態を表示
     if (is_keyboard_left()) {
         if (led_state.caps_lock) {
             writePinLow(B0);
-            writePinLow(D5);
         } else {
             writePinHigh(B0);
+        }
+
+        if (led_state.scroll_lock) {
+            writePinLow(D5);
+        } else {
             writePinHigh(D5);
         }
     } else {
-        if (led_state.scroll_lock) {
+        if (is_recording_dm) {
             writePinLow(B0);
             writePinLow(D5);
         } else {
@@ -142,34 +146,36 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 #pragma endregion
 
-#pragma region process_record_user
-bool is_recording_dm1 = false;
-bool is_recording_dm2 = false;
+#pragma region dynamic_macro
+void dynamic_macro_record_start_user(int8_t direction) {
+    switch (direction) {
+        case -1:
+        case 1:
+            is_recording_dm = true;
+            break;
+    }
+}
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+void dynamic_macro_record_end_user(int8_t direction) {
+    is_recording_dm = false;
+}
+#pragma endregion
+
+#pragma region process_record_user
+    bool
+    process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef OLED_TIMEOUT
     render_space_sleep = timer_read32();
 #endif
 
     switch (keycode) {
         case DM_REC1:
-            if (is_recording_dm1) {
-                is_recording_dm1 = false;
-                tap_code16(DM_RSTP);
-                return false;
-            } else {
-                is_recording_dm1 = true;
-                return true;
-            }
         case DM_REC2:
-            if (is_recording_dm2) {
-                is_recording_dm2 = false;
+            if (is_recording_dm) {
                 tap_code16(DM_RSTP);
                 return false;
-            } else {
-                is_recording_dm2 = true;
-                return true;
             }
+            return true;
         case MT(KC_GRV, KC_ESC):
             if (record->event.pressed) {
                 if (record->tap.count == 1) {
