@@ -56,4 +56,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define LEADER_TIMEOUT 250
 #define LEADER_PER_KEY_TIMING
+// #define SPLIT_TRANSPORT_MIRROR
+// #define SPLIT_LAYER_STATE_ENABLE
 #define SPLIT_LED_STATE_ENABLE
+// #define SPLIT_MODS_ENABLE
+// #define SPLIT_WPM_ENABLE
+// #define SPLIT_OLED_ENABLE

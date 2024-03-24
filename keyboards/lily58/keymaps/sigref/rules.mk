@@ -13,6 +13,7 @@ OLED_ENABLE = yes           # OLED display
 LEADER_ENABLE = yes         # Leader key support
 TAP_DANCE_ENABLE = yes
 WPM_ENABLE = yes
+# SPLIT_KEYBOARD = yes
 
 # If you want to change the display of OLED, you need to change here
 SRC +=  ./lib/rgb_state_reader.c \
