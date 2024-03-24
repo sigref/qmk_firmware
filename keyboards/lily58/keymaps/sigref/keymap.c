@@ -26,8 +26,10 @@ enum Layer {
 enum CustomKeyCode {
     CK_SET_WIN = SAFE_RANGE,
     CK_SET_MAC,
-    CK_WALT_MCMD,
-    CK_WWIN_MOPT,
+    CK_L_WALT_MCMD,
+    CK_R_WALT_MCMD,
+    CK_L_WWIN_MOPT,
+    CK_R_WWIN_MOPT,
 };
 
 enum TapDanceKeyCode {
@@ -39,35 +41,35 @@ enum TapDanceKeyCode {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [L_DEFAULT] = LAYOUT(
-        MT(KC_GRV, KC_ESC), KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                /**/              KC_6,    KC_7,    KC_8,    KC_9,   KC_0,            TD(TD_MIN_EQ),
-        KC_TAB,             KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                /**/              KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,            KC_BSLS,
-        KC_LCTL,            KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                /**/              KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN,         MT(MOD_RCTL, KC_QUOT),
-        KC_LSFT,            KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,   TD(TD_LBRC), /**/ TD(TD_RBRC), KC_N,    KC_M,    KC_COMM, KC_DOT, TD(TD_SLS_BSLS), KC_RSFT,
-                          CK_WWIN_MOPT, CK_WALT_MCMD, LT(L_L, KC_LNG2), KC_SPC,      /**/ KC_ENT,      LT(L_R, KC_LNG1), KC_BSPC, KC_DEL
+        KC_ESC,  XXXXXXX, XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX,          /**/          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        KC_TAB,  KC_Q,    KC_W,    KC_E,      KC_R,    KC_T,             /**/          KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,     XXXXXXX,
+        KC_LCTL, KC_A,    KC_S,    KC_D,      KC_F,    KC_G,             /**/          KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN,  MT(MOD_RCTL, KC_QUOT),
+        KC_LSFT, KC_Z,    KC_X,    KC_C,      KC_V,    KC_B,    XXXXXXX, /**/ XXXXXXX, KC_N,    KC_M,    KC_COMM, KC_DOT, KC_SLSH,  KC_RSFT,
+         CK_L_WWIN_MOPT,  CK_L_WALT_MCMD,  LT(L_L, KC_LNG2),    KC_SPC,  /**/ KC_ENT,  LT(L_R, KC_LNG1),  KC_BSPC,  KC_DEL
     ),
 
     [L_L] = LAYOUT(
-        KC_ESC,  _______, _______, _______, _______, _______,          /**/          _______, _______, _______, _______,     _______,     _______,
-        KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,            /**/          KC_F7,   KC_F8,   KC_F9,   KC_F10,      KC_F11,      KC_F12,
-        KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,          /**/          KC_CIRC, KC_AMPR, KC_ASTR, TD(TD_LBRC), TD(TD_RBRC), KC_TILD,
-        _______, _______, _______, _______, _______, _______, _______, /**/ _______, XXXXXXX, KC_UNDS, KC_PLUS, KC_LCBR,     KC_RCBR,     KC_PIPE,
-                                   QK_BOOT, _______, _______, _______, /**/ _______, _______, KC_MENU, KC_RALT
+        KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,            /**/          KC_F7,   KC_F8,   KC_F9,   KC_F10,      KC_F11,  KC_F12,
+        KC_1,    KC_2,    KC_3 ,   KC_4,    KC_5,    KC_6,             /**/          KC_7,    KC_8,    KC_9,    KC_0,        KC_MINS, KC_EQL,
+        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          /**/          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, KC_RCTL,
+        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, DM_REC1, /**/ DM_REC2, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, _______,
+                               QK_BOOT,  _______,  _______,   XXXXXXX, /**/ XXXXXXX,   _______,  CK_R_WALT_MCMD,  CK_R_WWIN_MOPT
     ),
 
     [L_R] = LAYOUT(
-        KC_ESC,  KC_1,    KC_2,    KC_3,     KC_4,    KC_5,             /**/          KC_6,    KC_7,    KC_8,    KC_9,     KC_0,    XXXXXXX,
-        _______, XXXXXXX, KC_UP,   XXXXXXX,  XXXXXXX, XXXXXXX,          /**/          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX,
+        KC_ESC,  _______, _______, _______,  _______, _______,          /**/          _______, _______, _______, _______,  _______, _______,
+        KC_GRV,  XXXXXXX, KC_UP,   XXXXXXX,  XXXXXXX, XXXXXXX,          /**/          XXXXXXX, XXXXXXX, KC_LBRC, KC_RBRC,  KC_BSLS, XXXXXXX,
         _______, KC_LEFT, KC_DOWN, KC_RIGHT, XXXXXXX, XXXXXXX,          /**/          KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT, XXXXXXX, KC_RCTL,
-        _______, KC_HOME, KC_END,  KC_PGUP,  KC_PGDN, XXXXXXX, XXXXXXX, /**/ XXXXXXX, XXXXXXX, KC_HOME, KC_END,  KC_PGUP,  KC_PGDN, _______,
-                                   _______,  _______, _______, XXXXXXX, /**/ XXXXXXX, _______, XXXXXXX, QK_BOOT
+        _______, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, DM_PLY1, /**/ DM_PLY2, KC_HOME, KC_PGUP, KC_PGDN, KC_END,   XXXXXXX, _______,
+                                _______,  _______,  _______,   XXXXXXX, /**/ XXXXXXX,   _______,  _______,  QK_BOOT
     ),
 
     [L_LR] = LAYOUT(
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,             /**/             XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR, KC_SCRL, KC_PAUS,
-        DM_RSTP, DM_REC1, DM_REC2, XXXXXXX, XXXXXXX, XXXXXXX,             /**/             XXXXXXX, XXXXXXX, XXXXXXX, KC_INS,  KC_HOME, KC_PGUP,
-        KC_CAPS, DM_PLY1, DM_PLY2, XXXXXXX, XXXXXXX, XXXXXXX,             /**/             XXXXXXX, XXXXXXX, XXXXXXX, KC_DEL,  KC_END,  KC_PGDN,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, CK_SET_WIN, /**/ CK_SET_MAC, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                                   XXXXXXX, XXXXXXX, _______, XXXXXXX,    /**/ XXXXXXX,    _______, XXXXXXX, XXXXXXX
+        KC_MENU, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,             /**/             XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        KC_CAPS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,             /**/             XXXXXXX, XXXXXXX, KC_PSCR, KC_SCRL, KC_PAUS, XXXXXXX,
+        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,             /**/             XXXXXXX, XXXXXXX, KC_INS,  KC_HOME, KC_PGUP, _______,
+        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, CK_SET_WIN, /**/ CK_SET_MAC, XXXXXXX, XXXXXXX, KC_DEL,  KC_END,  KC_PGDN, _______,
+                        CK_L_WWIN_MOPT,  _______,  _______,   _______,    /**/ _______,    _______,  _______,  CK_R_WWIN_MOPT
     ),
 };
 
@@ -139,8 +141,29 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #pragma endregion
 
 #pragma region process_record_user
+bool is_recording_dm1 = false;
+bool is_recording_dm2 = false;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        case DM_REC1:
+            if (is_recording_dm1) {
+                is_recording_dm1 = false;
+                tap_code16(DM_RSTP);
+                return false;
+            } else {
+                is_recording_dm1 = true;
+                return true;
+            }
+        case DM_REC2:
+            if (is_recording_dm2) {
+                is_recording_dm2 = false;
+                tap_code16(DM_RSTP);
+                return false;
+            } else {
+                is_recording_dm2 = true;
+                return true;
+            }
         case MT(KC_GRV, KC_ESC):
             if (record->event.pressed) {
                 if (record->tap.count == 1) {
@@ -162,7 +185,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 eeconfig_update_user(user_config.raw);
             }
             return false;
-        case CK_WALT_MCMD:
+        case CK_L_WALT_MCMD:
             if (record->event.pressed) {
                 if (user_config.is_mac) {
                     register_code16(KC_LCMD);
@@ -177,7 +200,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
-        case CK_WWIN_MOPT:
+        case CK_R_WALT_MCMD:
+            if (record->event.pressed) {
+                if (user_config.is_mac) {
+                    register_code16(KC_RCMD);
+                } else {
+                    register_code16(KC_RALT);
+                }
+            } else {
+                if (user_config.is_mac) {
+                    unregister_code16(KC_RCMD);
+                } else {
+                    unregister_code16(KC_RALT);
+                }
+            }
+            return false;
+        case CK_L_WWIN_MOPT:
             if (record->event.pressed) {
                 if (user_config.is_mac) {
                     register_code16(KC_LOPT);
@@ -189,6 +227,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     unregister_code16(KC_LOPT);
                 } else {
                     unregister_code16(KC_LWIN);
+                }
+            }
+            return false;
+        case CK_R_WWIN_MOPT:
+            if (record->event.pressed) {
+                if (user_config.is_mac) {
+                    register_code16(KC_ROPT);
+                } else {
+                    register_code16(KC_RWIN);
+                }
+            } else {
+                if (user_config.is_mac) {
+                    unregister_code16(KC_ROPT);
+                } else {
+                    unregister_code16(KC_RWIN);
                 }
             }
             return false;
