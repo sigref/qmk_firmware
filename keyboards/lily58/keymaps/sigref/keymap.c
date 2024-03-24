@@ -18,9 +18,9 @@ user_config_t user_config;
 
 enum Layer {
     L_DEFAULT = 0,
-    L_GRYPH,
-    L_MOVE,
-    L_TRI,
+    L_L,
+    L_R,
+    L_LR,
 };
 
 enum CustomKeyCode {
@@ -43,10 +43,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,             KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                /**/              KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,            KC_BSLS,
         KC_LCTL,            KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                /**/              KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN,         MT(MOD_RCTL, KC_QUOT),
         KC_LSFT,            KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,   TD(TD_LBRC), /**/ TD(TD_RBRC), KC_N,    KC_M,    KC_COMM, KC_DOT, TD(TD_SLS_BSLS), KC_RSFT,
-                      CK_WWIN_MOPT, CK_WALT_MCMD, LT(L_GRYPH, KC_LNG2), KC_SPC,      /**/ KC_ENT,      LT(L_MOVE, KC_LNG1), KC_BSPC, KC_DEL
+                          CK_WWIN_MOPT, CK_WALT_MCMD, LT(L_L, KC_LNG2), KC_SPC,      /**/ KC_ENT,      LT(L_R, KC_LNG1), KC_BSPC, KC_DEL
     ),
 
-    [L_GRYPH] = LAYOUT(
+    [L_L] = LAYOUT(
         KC_ESC,  _______, _______, _______, _______, _______,          /**/          _______, _______, _______, _______,     _______,     _______,
         KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,            /**/          KC_F7,   KC_F8,   KC_F9,   KC_F10,      KC_F11,      KC_F12,
         KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,          /**/          KC_CIRC, KC_AMPR, KC_ASTR, TD(TD_LBRC), TD(TD_RBRC), KC_TILD,
@@ -54,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                    QK_BOOT, _______, _______, _______, /**/ _______, _______, KC_MENU, KC_RALT
     ),
 
-    [L_MOVE] = LAYOUT(
+    [L_R] = LAYOUT(
         KC_ESC,  KC_1,    KC_2,    KC_3,     KC_4,    KC_5,             /**/          KC_6,    KC_7,    KC_8,    KC_9,     KC_0,    XXXXXXX,
         _______, XXXXXXX, KC_UP,   XXXXXXX,  XXXXXXX, XXXXXXX,          /**/          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX,
         _______, KC_LEFT, KC_DOWN, KC_RIGHT, XXXXXXX, XXXXXXX,          /**/          KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT, XXXXXXX, KC_RCTL,
@@ -62,7 +62,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                    _______,  _______, _______, XXXXXXX, /**/ XXXXXXX, _______, XXXXXXX, QK_BOOT
     ),
 
-    [L_TRI] = LAYOUT(
+    [L_LR] = LAYOUT(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,             /**/             XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR, KC_SCRL, KC_PAUS,
         DM_RSTP, DM_REC1, DM_REC2, XXXXXXX, XXXXXXX, XXXXXXX,             /**/             XXXXXXX, XXXXXXX, XXXXXXX, KC_INS,  KC_HOME, KC_PGUP,
         KC_CAPS, DM_PLY1, DM_PLY2, XXXXXXX, XXXXXXX, XXXXXXX,             /**/             XXXXXXX, XXXXXXX, XXXXXXX, KC_DEL,  KC_END,  KC_PGDN,
@@ -133,7 +133,7 @@ bool led_update_user(led_t led_state) {
 
 #pragma region layer_state_set_user
 layer_state_t layer_state_set_user(layer_state_t state) {
-  state = update_tri_layer_state(state, L_GRYPH, L_MOVE, L_TRI);
+  state = update_tri_layer_state(state, L_L, L_R, L_LR);
   return state;
 }
 #pragma endregion
