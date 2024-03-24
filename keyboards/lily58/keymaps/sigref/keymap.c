@@ -73,6 +73,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
+uint32_t render_space_sleep = 0;
+
 #pragma region eeconfig_init_user
 void eeconfig_init_user(void) { // EEPROM is getting reset!
     user_config.raw = 0;
@@ -145,6 +147,10 @@ bool is_recording_dm1 = false;
 bool is_recording_dm2 = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+#ifdef OLED_TIMEOUT
+    render_space_sleep = timer_read32();
+#endif
+
     switch (keycode) {
         case DM_REC1:
             if (is_recording_dm1) {
@@ -476,6 +482,20 @@ const char PROGMEM mask_row_4[] = {
 
 void render_space(void) {
     char wpm = get_current_wpm();
+
+#ifdef OLED_TIMEOUT
+    if (timer_elapsed32(render_space_sleep) > OLED_TIMEOUT) {
+        render_space_sleep = 0;
+    }
+
+    if (timer_elapsed32(render_space_sleep) > OLED_TIMEOUT) {
+        oled_off();
+        return;
+    } else {
+        oled_on();
+    }
+#endif
+
     char render_row[128];
     int i;
     oled_set_cursor(0, 0);
