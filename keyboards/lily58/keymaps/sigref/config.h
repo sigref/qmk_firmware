@@ -56,6 +56,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define LEADER_TIMEOUT 250
 #define LEADER_PER_KEY_TIMING
+#define OLED_FADE_OUT
+// #define OLED_FADE_OUT_INTERVAL 0
+#define OLED_TIMEOUT 30000
 // #define SPLIT_TRANSPORT_MIRROR
 // #define SPLIT_LAYER_STATE_ENABLE
 #define SPLIT_LED_STATE_ENABLE
